@@ -201,6 +201,7 @@ def train(args, lvae):
                     tar_omn = torch.from_numpy(args.num_classes * np.ones(target_omn.shape[0]))
                     if i_omn<=158: #158*64=10112>10000
                         #if args.cuda:
+                        print(args.device)
                         data_omn = data_omn.to(args.device)
                         with torch.no_grad():
                             data_omn = Variable(data_omn)
