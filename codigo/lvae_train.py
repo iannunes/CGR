@@ -40,13 +40,18 @@ def train(args, lvae):
             print("6-",args.device)
             data = data.to(args.device)
             target = target.to(args.device)
+            print("6-2-",args.device)
             data, target = Variable(data), Variable(target)
-
+            print("6-3-",args.device)
             loss, mu, output, output_mu, x_re, rec, kl, ce = lvae.loss(data, target, target_en, next(beta), args.lamda)
+            print("6-4-",args.device)
             rec_loss = (x_re - data).pow(2).sum((3, 2, 1))
             optimizer.zero_grad()
+            print("6-5-",args.device)
             loss.backward()
+            print("6-6-",args.device)
             optimizer.step()
+            print("6-7-",args.device)
 
             outlabel = output.data.max(1)[1]  # get the index of the max log-probability
             correct_train += outlabel.eq(target.view_as(outlabel)).sum().item()
