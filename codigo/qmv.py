@@ -1,4 +1,3 @@
-#
 import os
 os.environ['R_HOME'] = '/home/loganriggs/anaconda3/lib/R' #path to your R installation
 
