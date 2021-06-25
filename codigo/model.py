@@ -188,7 +188,7 @@ class LVAE(nn.Module):
     def lnet(self, x, y_de):
         # ---deterministic upward pass
         # upwards
-        enc1_1, mu_up1_1, var_up1_1 = self.CONV1_1.encode(x)
+        enc1_1, mu_up1_1, var_up1_1 = self.CONV1_1.encode(x.cuda())
         enc1_2, mu_up1_2, var_up1_2 = self.CONV1_2.encode(enc1_1)
 
         enc2_1, mu_up2_1, var_up2_1 = self.CONV2_1.encode(enc1_2)
