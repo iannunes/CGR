@@ -384,23 +384,23 @@ if __name__ == "__main__":
     # data loader
     train_dataset = datasets.MNIST('data/mnist', download=True, train=True,
                                    transform=transforms.Compose([
-
                                        transforms.ToTensor(),
                                        transforms.Normalize((0.1307,), (0.3081,))]))
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=4)
+
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=14)
 
     val_dataset = datasets.MNIST('data/mnist', download=False, train=False,
                                   transform=transforms.Compose([
 
                                       transforms.ToTensor(),
                                       transforms.Normalize((0.1307,), (0.3081,))]))
-    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, num_workers=4)
+    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, num_workers=14)
 
     omn_loader = OmniglotLoader(batch_size=args.batch_size, train=False, drop_last=False)
 
     # Model
     # lvae.cuda()
-    nllloss = nn.NLLLoss().to(device)
+    nllloss = nn.NLLLoss().to(args.device)
 
     # optimzer
     optimizer = optim.SGD(lvae.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.wd)
