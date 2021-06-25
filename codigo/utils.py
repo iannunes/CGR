@@ -7,9 +7,10 @@ from torch.nn import functional as F
 def sample_gaussian(m, v):
 	#sample = torch.randn(m.shape).cuda()
 	#sample = torch.randn(m.shape)
-	use_cuda = torch.cuda.is_available() and True
-	device = torch.device("cuda" if use_cuda else "cpu")
-	sample = torch.randn(m.shape).to(device)
+	if torch.cuda.is_available():
+		sample = torch.randn(m.shape).cuda()
+	else:
+		sample = torch.randn(m.shape)
 	z = m + (v**0.5)*sample
 	return z
 

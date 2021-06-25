@@ -35,11 +35,12 @@ def train(args, lvae):
             target_en = torch.Tensor(target.shape[0], args.num_classes)
             target_en.zero_()
             target_en.scatter_(1, target.view(-1, 1), 1)  # one-hot encoding
-            target_en = target_en.to(device)
+            if torch.cuda.is_available():
+                target_en = target_en.cuda()
             #if args.cuda:
-            print("6-",args.device)
-            data = data.to(args.device)
-            target = target.to(args.device)
+                print("6-",args.device)
+                data = data.cuda()
+                target = target.cuda()
             print("6-2-",args.device)
             data, target = Variable(data), Variable(target)
             print("6-3-",args.device)
@@ -95,10 +96,10 @@ def train(args, lvae):
                 target_val_en = torch.Tensor(target_val.shape[0], args.num_classes)
                 target_val_en.zero_()
                 target_val_en.scatter_(1, target_val.view(-1, 1), 1)  # one-hot encoding
-                target_val_en = target_val_en.to(device)
-                #if args.cuda:
-                print("1-",args.device)
-                data_val, target_val = data_val.to(args.device), target_val.to(args.device)
+                if torch.cuda.is_available():
+                    target_val_en = target_val_en.cuda()
+                    print("1-",args.device)
+                    data_val, target_val = data_val.cuda(), target_val.cuda()
                 with torch.no_grad():
                     data_val, target_val = Variable(data_val), Variable(target_val)
 
@@ -147,9 +148,9 @@ def train(args, lvae):
                     target_test_en = torch.Tensor(target_test.shape[0], args.num_classes)
                     target_test_en.zero_()
                     target_test_en.scatter_(1, target_test.view(-1, 1), 1)  # one-hot encoding
-                    target_test_en = target_test_en.to(device)
-                    #if args.cuda:
-                    data_test, target_test = data_test.to(args.device), target_test.to(args.device)
+                    if torch.cuda.is_available():
+                        target_test_en = target_test_en.cuda()
+                        data_test, target_test = data_test.cuda(), target_test.cuda()
                     with torch.no_grad():
                         data_test, target_test = Variable(data_test), Variable(target_test)
 
@@ -209,7 +210,8 @@ def train(args, lvae):
                     if i_omn<=158: #158*64=10112>10000
                         #if args.cuda:
                         print("2-",args.device)
-                        data_omn = data_omn.to(args.device)
+                        if torch.cuda.is_available():
+                            data_omn = data_omn.cuda()
                         with torch.no_grad():
                             data_omn = Variable(data_omn)
                     else:
@@ -242,9 +244,9 @@ def train(args, lvae):
                     tar_mnist_noise = torch.from_numpy(args.num_classes * np.ones(target_test.shape[0]))
                     noise = torch.from_numpy(np.random.rand(data_test.shape[0], 1, 28, 28)).float()
                     data_mnist_noise = data_test.add(noise)
-                    #if args.cuda:
-                    print("3-",args.device)
-                    data_mnist_noise = data_mnist_noise.to(args.device)
+                    if torch.cuda.is_available():
+                        print("3-",args.device)
+                        data_mnist_noise = data_mnist_noise.cuda()
                     with torch.no_grad():
                         data_mnist_noise = Variable(data_mnist_noise)
 
@@ -274,9 +276,9 @@ def train(args, lvae):
                 for data_test, target_test in val_loader:
                     tar_noise = torch.from_numpy(args.num_classes * np.ones(target_test.shape[0]))
                     data_noise = torch.from_numpy(np.random.rand(data_test.shape[0], 1, 28, 28)).float()
-                    #if args.cuda:
-                    print("1-",args.device)
-                    data_noise = data_noise.to(args.device)
+                    if torch.cuda.is_available():
+                        print("1-",args.device)
+                        data_noise = data_noise.cuda()
                     with torch.no_grad():
                         data_noise = Variable(data_noise)
 
@@ -400,7 +402,10 @@ if __name__ == "__main__":
 
     # Model
     # lvae.cuda()
-    nllloss = nn.NLLLoss().to(args.device)
+    if torch.cuda.is_available():
+        nllloss = nn.NLLLoss().cuda()
+    else:
+        nllloss = nn.NLLLoss()
 
     # optimzer
     optimizer = optim.SGD(lvae.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.wd)
