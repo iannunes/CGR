@@ -37,6 +37,7 @@ def train(args, lvae):
             target_en.scatter_(1, target.view(-1, 1), 1)  # one-hot encoding
             target_en = target_en.to(device)
             #if args.cuda:
+            print("6-",args.device)
             data = data.to(args.device)
             target = target.to(args.device)
             data, target = Variable(data), Variable(target)
@@ -91,6 +92,7 @@ def train(args, lvae):
                 target_val_en.scatter_(1, target_val.view(-1, 1), 1)  # one-hot encoding
                 target_val_en = target_val_en.to(device)
                 #if args.cuda:
+                print("1-",args.device)
                 data_val, target_val = data_val.to(args.device), target_val.to(args.device)
                 with torch.no_grad():
                     data_val, target_val = Variable(data_val), Variable(target_val)
@@ -201,7 +203,7 @@ def train(args, lvae):
                     tar_omn = torch.from_numpy(args.num_classes * np.ones(target_omn.shape[0]))
                     if i_omn<=158: #158*64=10112>10000
                         #if args.cuda:
-                        print(args.device)
+                        print("2-",args.device)
                         data_omn = data_omn.to(args.device)
                         with torch.no_grad():
                             data_omn = Variable(data_omn)
@@ -236,6 +238,7 @@ def train(args, lvae):
                     noise = torch.from_numpy(np.random.rand(data_test.shape[0], 1, 28, 28)).float()
                     data_mnist_noise = data_test.add(noise)
                     #if args.cuda:
+                    print("3-",args.device)
                     data_mnist_noise = data_mnist_noise.to(args.device)
                     with torch.no_grad():
                         data_mnist_noise = Variable(data_mnist_noise)
@@ -267,6 +270,7 @@ def train(args, lvae):
                     tar_noise = torch.from_numpy(args.num_classes * np.ones(target_test.shape[0]))
                     data_noise = torch.from_numpy(np.random.rand(data_test.shape[0], 1, 28, 28)).float()
                     #if args.cuda:
+                    print("1-",args.device)
                     data_noise = data_noise.to(args.device)
                     with torch.no_grad():
                         data_noise = Variable(data_noise)
@@ -371,7 +375,7 @@ if __name__ == "__main__":
 
     use_cuda = torch.cuda.is_available() and True
     args.device = torch.device("cuda" if use_cuda else "cpu")
-
+    print("5-",args.device)
     # data loader
     train_dataset = datasets.MNIST('data/mnist', download=True, train=True,
                                    transform=transforms.Compose([
