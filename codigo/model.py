@@ -31,7 +31,7 @@ class CONV(nn.Module):
         )
 
     def encode(self, x):
-        h = self.net(x)
+        h = self.net(x.cuda())
         h_flat = h.view(-1, self.out_ch*self.flat_dim*self.flat_dim)
         mu, var = self.mean_layer(h_flat), self.var_layer(h_flat)
         var = F.softplus(var) + 1e-8
@@ -65,7 +65,7 @@ class TCONV(nn.Module):
         )
 
     def decode(self, x):
-        x = self.fc(x)
+        x = self.fc(x.cuda())
         x = x.view(-1, self.t_in_ch, self.unflat_dim, self.unflat_dim)
         h = self.net(x)
         h_flat = h.view(-1, self.t_out_ch * self.out_dim * self.out_dim)
@@ -94,7 +94,7 @@ class FCONV(nn.Module):
         )
 
     def final_decode(self,x):
-        x = self.fc_final(x)
+        x = self.fc_final(x.cuda())
         x = x.view(-1, self.t_in_ch, self.unflat_dim, self.unflat_dim)
         x_re = self.final(x)
         return x_re
